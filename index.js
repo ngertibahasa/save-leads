@@ -10,15 +10,13 @@ app.use(express.json()); // Izinkan Express untuk mengurai JSON body
 
 // Endpoint untuk Konsultasi
 app.post("/api/konsultasi", async (req, res) => {
-  const { Nama, Usia, Program } = req.body;
+  const { Nama, Usia, Domisili, Program } = req.body;
 
-  if (!Nama || !Usia || !Program) {
-    return res
-      .status(400)
-      .json({
-        status: "error",
-        message: "Nama, Usia, dan Program wajib diisi.",
-      });
+  if (!Nama || !Usia || !Domisili || !Program) {
+    return res.status(400).json({
+      status: "error",
+      message: "Nama, Usia, Domisili dan Program wajib diisi.",
+    });
   }
 
   const appScriptUrl = process.env.APPSCRIPT_URL; // URL Web App App Script Anda
@@ -35,50 +33,48 @@ app.post("/api/konsultasi", async (req, res) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ type: "konsultasi", Nama, Usia, Program }),
+      body: JSON.stringify({
+        type: "konsultasi",
+        Nama,
+        Usia,
+        Domisili,
+        Program,
+      }),
     });
 
     const data = await response.json();
     if (data.status === "success") {
-      res
-        .status(200)
-        .json({
-          status: "success",
-          message: "Data Konsultasi berhasil dikirim.",
-        });
+      res.status(200).json({
+        status: "success",
+        message: "Data Konsultasi berhasil dikirim.",
+      });
     } else {
-      res
-        .status(500)
-        .json({
-          status: "error",
-          message:
-            data.message || "Gagal menyimpan data Konsultasi ke Spreadsheet.",
-        });
+      res.status(500).json({
+        status: "error",
+        message:
+          data.message || "Gagal menyimpan data Konsultasi ke Spreadsheet.",
+      });
     }
   } catch (error) {
     console.error("Error mengirim data konsultasi ke App Script:", error);
-    res
-      .status(500)
-      .json({
-        status: "error",
-        message: "Terjadi kesalahan server saat menyimpan data konsultasi.",
-      });
+    res.status(500).json({
+      status: "error",
+      message: "Terjadi kesalahan server saat menyimpan data konsultasi.",
+    });
   }
 });
 
 // Endpoint untuk Registrasi
 app.post("/api/registrasi", async (req, res) => {
-  const { Nama, Usia, NoWA, Email, Program, Jam, Note, TauNBdariMana } =
+  const { Nama, Usia, NoWA, Email, Program, Jam, Domisili, TauNBdariMana } =
     req.body;
 
   // Validasi sederhana (sesuaikan kebutuhan Anda)
   if (!Nama || !Usia || !NoWA || !Program || !Jam) {
-    return res
-      .status(400)
-      .json({
-        status: "error",
-        message: "Nama, Usia, No WA, Program, dan Jam wajib diisi.",
-      });
+    return res.status(400).json({
+      status: "error",
+      message: "Nama, Usia, No WA, Program, dan Jam wajib diisi.",
+    });
   }
 
   const appScriptUrl = process.env.APPSCRIPT_URL; // URL Web App App Script Anda
@@ -103,36 +99,30 @@ app.post("/api/registrasi", async (req, res) => {
         Email,
         Program,
         Jam,
-        Note,
+        Domisili,
         TauNBdariMana,
       }),
     });
 
     const data = await response.json();
     if (data.status === "success") {
-      res
-        .status(200)
-        .json({
-          status: "success",
-          message: "Data Registrasi berhasil dikirim.",
-        });
+      res.status(200).json({
+        status: "success",
+        message: "Data Registrasi berhasil dikirim.",
+      });
     } else {
-      res
-        .status(500)
-        .json({
-          status: "error",
-          message:
-            data.message || "Gagal menyimpan data Registrasi ke Spreadsheet.",
-        });
+      res.status(500).json({
+        status: "error",
+        message:
+          data.message || "Gagal menyimpan data Registrasi ke Spreadsheet.",
+      });
     }
   } catch (error) {
     console.error("Error mengirim data registrasi ke App Script:", error);
-    res
-      .status(500)
-      .json({
-        status: "error",
-        message: "Terjadi kesalahan server saat menyimpan data registrasi.",
-      });
+    res.status(500).json({
+      status: "error",
+      message: "Terjadi kesalahan server saat menyimpan data registrasi.",
+    });
   }
 });
 
